@@ -41,7 +41,7 @@
 ## 传递请求头与配置
 - 与 axios 一致，通过第二个参数传入 `AxiosRequestConfig`：
   ```ts
-  simple.get('https://example.com/api/v1/fs/stats', {
+  simple.get('https://example.com/api/stats', {
     headers: { 'x-hc-user-id': 'your-user-id' }
   })()
   ```
@@ -53,24 +53,6 @@
     .then(res => res.data.id)
   ```
 
-## 与 Knowledge API 搭配
-- 基础地址：`https://example.com/api`
-- 常用接口：
-  - 健康检查：`GET /health`
-  - 配置：`GET /v1/config`
-  - RAG 健康：`GET /v1/rag/health`
-  - 文件系统统计：`GET /v1/fs/stats`（可选头 `x-hc-user-id`）
-
-- 示例：
-  ```ts
-  const base = 'https://example.com/api'
-
-  await simple.get(`${base}/health`)()
-  await simple.get(`${base}/v1/config`)()
-  await simple.get(`${base}/v1/rag/health`)()
-  await simple.get(`${base}/v1/fs/stats`, { headers: { 'x-hc-user-id': 'uid-123' } })()
-  ```
-
 ## 浏览器（纯 HTML）示例
 - 本仓库已提供示例页面：`examples/index.html`
 - 打开方式（本地）：
@@ -78,7 +60,6 @@
      - `python3 -m http.server 8000`
      - 或使用任意静态服务器工具
   2. 访问 `http://localhost:8000/examples/index.html`
-
 ## 设计理念
 - 将 axios 的方法以柯里化形式暴露：
   - `post(url)(payload)`、`put(url)(payload)`、`patch(url)(payload)`
@@ -217,6 +198,38 @@ const data = await decryptBySenderForReceiver(serverKeys, clientPub, cipherBody)
 - `simple.secure(...).fetch` 当前提供 `post/put/patch` 三种方法。
 - 使用 `fetch` 时，第二个参数 `init` 可覆盖 `headers/credentials` 等配置。
 - Unsea 加密对象内含发送者公钥与时间戳等元信息，便于来源校验与时效判断。
+
+## 简单 P2P 加密示例
+
+```ts
+import {
+  generateRandomPair,
+  encryptMessageWithMeta,
+  decryptMessageWithMeta,
+} from 'simple-apis'
+
+// Alice 与 Bob 各自生成密钥对（均包含 { pub, priv, epub, epriv }）
+const alice = await generateRandomPair()
+const bob = await generateRandomPair()
+
+// Alice → Bob（Alice 使用 Bob 的加密公钥加密）
+const cipherForBob = await encryptMessageWithMeta(
+  JSON.stringify({ from: 'alice', text: 'hello bob' }),
+  { epub: bob.epub }
+)
+
+// Bob 使用自己的加密私钥解密
+const plainForBob = await decryptMessageWithMeta(cipherForBob, bob.epriv)
+console.log(JSON.parse(plainForBob)) // { from: 'alice', text: 'hello bob' }
+
+// Bob → Alice（Bob 使用 Alice 的加密公钥加密）
+const cipherForAlice = await encryptMessageWithMeta(
+  JSON.stringify({ from: 'bob', text: 'hey alice' }),
+  { epub: alice.epub }
+)
+const plainForAlice = await decryptMessageWithMeta(cipherForAlice, alice.epriv)
+console.log(JSON.parse(plainForAlice)) // { from: 'bob', text: 'hey alice' }
+```
 
 ## API 参考
 

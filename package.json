@@ -1,6 +1,6 @@
 {
   "name": "simple-apis",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": false,
   "description": "Minimal axios curry wrapper: simple.post(url)(data)",
   "license": "MIT",

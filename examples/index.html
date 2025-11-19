@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Simple Axios HTML Demo</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; padding: 24px; }
+    h1 { font-size: 20px; margin: 0 0 12px; }
+    .row { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+    button { padding: 6px 10px; }
+    input { padding: 6px 8px; }
+    pre { background: #f6f8fa; border: 1px solid #eaecef; padding: 12px; overflow: auto; }
+  </style>
+</head>
+<body>
+  <h1>SuperSimple API HTML examples</h1>
+
+  <div class="row">
+    <input id="userId" placeholder="x-hc-user-id (可选)" />
+  </div>
+
+  <div class="row">
+    <button id="btnHealth">GET /api/health</button>
+    <button id="btnConfig">GET /api/config</button>
+    <button id="btnRagHealth">GET /api/test</button>
+    <button id="btnFsStats">GET /api/stats</button>
+  </div>
+
+  <pre id="out">点击上面的按钮开始请求…</pre>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "axios": "https://esm.sh/axios@1.13.2"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import { simple } from '../dist/index.js'
+
+    const out = document.getElementById('out')
+    const show = (label, data) => { out.textContent = label + '\n' + JSON.stringify(data, null, 2) }
+
+    const base = 'https://xxx.xxx.xxx/api'
+
+    document.getElementById('btnHealth').addEventListener('click', () => {
+      simple.get(`${base}/health`)()
+        .then(res => show('GET /health', res.data))
+        .catch(err => show('Error', { message: err.message, status: err?.response?.status }))
+    })
+
+    document.getElementById('btnConfig').addEventListener('click', () => {
+      simple.get(`${base}/config`)()
+        .then(res => show('GET /config', res.data))
+        .catch(err => show('Error', { message: err.message, status: err?.response?.status }))
+    })
+
+    document.getElementById('btnRagHealth').addEventListener('click', () => {
+      simple.get(`${base}/test`)()
+        .then(res => show('GET /test', res.data))
+        .catch(err => show('Error', { message: err.message, status: err?.response?.status }))
+    })
+
+    document.getElementById('btnFsStats').addEventListener('click', () => {
+      const userId = document.getElementById('userId').value.trim()
+      const headers = userId ? { 'x-hc-user-id': userId } : undefined
+      simple.get(`${base}/stats`, { headers })()
+        .then(res => show('GET /stats', res.data))
+        .catch(err => show('Error', { message: err.message, status: err?.response?.status }))
+    })
+  </script>
+</body>
+</html>

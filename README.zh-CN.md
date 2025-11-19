@@ -54,7 +54,7 @@
   ```
 
 ## 与 Knowledge API 搭配
-- 基础地址：`https://knowledge.ponzsdev.heiyu.space/api`
+- 基础地址：`https://example.com/api`
 - 常用接口：
   - 健康检查：`GET /health`
   - 配置：`GET /v1/config`
@@ -63,7 +63,7 @@
 
 - 示例：
   ```ts
-  const base = 'https://knowledge.ponzsdev.heiyu.space/api'
+  const base = 'https://example.com/api'
 
   await simple.get(`${base}/health`)()
   await simple.get(`${base}/v1/config`)()

@@ -56,7 +56,7 @@ A minimal, curried wrapper around axios with `simple.post(url)(data)` ergonomics
   ```
 
 ## Knowledge API Examples
-- Base URL: `https://knowledge.ponzsdev.heiyu.space/api`
+- Base URL: `https://example.com/api`
 - Common endpoints:
   - Health: `GET /health`
   - Config: `GET /v1/config`
@@ -65,7 +65,7 @@ A minimal, curried wrapper around axios with `simple.post(url)(data)` ergonomics
 
 - Example:
   ```ts
-  const base = 'https://knowledge.ponzsdev.heiyu.space/api'
+  const base = 'https://example.com/api'
 
   await simple.get(`${base}/health`)()
   await simple.get(`${base}/v1/config`)()

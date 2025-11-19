@@ -43,7 +43,7 @@ A minimal, curried wrapper around axios&unsea with `simple.post(url)(data)` ergo
 ## Headers and Config
 - Same as axios. Provide `AxiosRequestConfig` as the second argument:
   ```ts
-  simple.get('https://example.com/api/v1/fs/stats', {
+  simple.get('https://example.com/api/stats', {
     headers: { 'x-hc-user-id': 'your-user-id' }
   })()
   ```
@@ -55,24 +55,6 @@ A minimal, curried wrapper around axios&unsea with `simple.post(url)(data)` ergo
     .then(res => res.data.id)
   ```
 
-## Knowledge API Examples
-- Base URL: `https://example.com/api`
-- Common endpoints:
-  - Health: `GET /health`
-  - Config: `GET /v1/config`
-  - RAG Health: `GET /v1/rag/health`
-  - FS Stats: `GET /v1/fs/stats` (optional header `x-hc-user-id`)
-
-- Example:
-  ```ts
-  const base = 'https://example.com/api'
-
-  await simple.get(`${base}/health`)()
-  await simple.get(`${base}/v1/config`)()
-  await simple.get(`${base}/v1/rag/health`)()
-  await simple.get(`${base}/v1/fs/stats`, { headers: { 'x-hc-user-id': 'uid-123' } })()
-  ```
-
 ## Browser (Pure HTML) Demo
 - See `examples/index.html` in this repo.
 - Run locally:
@@ -80,7 +62,6 @@ A minimal, curried wrapper around axios&unsea with `simple.post(url)(data)` ergo
      - `python3 -m http.server 8000`
      - Or any static server tool
   2. Visit `http://localhost:8000/examples/index.html`
-
 ## Design
 - Curried axios methods:
   - `post(url)(payload)`, `put(url)(payload)`, `patch(url)(payload)`
@@ -217,6 +198,38 @@ const data = await decryptBySenderForReceiver(serverKeys, clientPub, cipherBody)
 - `simple.secure(...).fetch` currently provides `post/put/patch` methods.
 - With `fetch`, the second `init` argument lets you override `headers/credentials` etc.
 - Unsea encrypted objects include sender pubkey and timestamp metadata for verification.
+
+## Simple P2P Encryption Example
+
+```ts
+import {
+  generateRandomPair,
+  encryptMessageWithMeta,
+  decryptMessageWithMeta,
+} from 'simple-apis'
+
+// Alice and Bob generate their keypairs (each has { pub, priv, epub, epriv })
+const alice = await generateRandomPair()
+const bob = await generateRandomPair()
+
+// Alice → Bob (Alice encrypts for Bob using Bob's encryption public key)
+const cipherForBob = await encryptMessageWithMeta(
+  JSON.stringify({ from: 'alice', text: 'hello bob' }),
+  { epub: bob.epub }
+)
+
+// Bob decrypts using his encryption private key
+const plainForBob = await decryptMessageWithMeta(cipherForBob, bob.epriv)
+console.log(JSON.parse(plainForBob)) // { from: 'alice', text: 'hello bob' }
+
+// Bob → Alice (Bob encrypts for Alice using Alice's encryption public key)
+const cipherForAlice = await encryptMessageWithMeta(
+  JSON.stringify({ from: 'bob', text: 'hey alice' }),
+  { epub: alice.epub }
+)
+const plainForAlice = await decryptMessageWithMeta(cipherForAlice, alice.epriv)
+console.log(JSON.parse(plainForAlice)) // { from: 'bob', text: 'hey alice' }
+```
 
 ## API Reference
 

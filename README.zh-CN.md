@@ -1,4 +1,5 @@
 # simple-apis
+[![npm 版本](https://img.shields.io/npm/v/simple-apis.svg)](https://www.npmjs.com/package/simple-apis) [![npm 下载量](https://img.shields.io/npm/dm/simple-apis.svg)](https://www.npmjs.com/package/simple-apis) [![许可证: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 一个基于 axios 的极简柯里化封装，支持 `simple.post(url)(data)` 的调用体验。
 

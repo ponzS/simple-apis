@@ -1,4 +1,5 @@
 # simple-apis
+[![npm version](https://img.shields.io/npm/v/simple-apis.svg)](https://www.npmjs.com/package/simple-apis) [![npm downloads](https://img.shields.io/npm/dm/simple-apis.svg)](https://www.npmjs.com/package/simple-apis) [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 [中文文档](./README.zh-CN.md)
 

@@ -11,6 +11,9 @@ importers:
       axios:
         specifier: ^1.7.7
         version: 1.13.2
+      simple-apis:
+        specifier: ^0.1.0
+        version: 0.1.0
     devDependencies:
       typescript:
         specifier: ^5.6.3
@@ -110,6 +113,10 @@ packages:
 
   proxy-from-env@1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
+
+  simple-apis@0.1.0:
+    resolution: {integrity: sha512-sFDl2ed5kOzAIzgvhtLhBXypgLvfFM83S8Ts5T8lvvy8jG4e9gtf80oNKmDzf0wX+5UvqQyd+cOgMYarGCWlgA==}
+    engines: {node: '>=18'}
 
   typescript@5.9.3:
     resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
@@ -211,5 +218,11 @@ snapshots:
       mime-db: 1.52.0
 
   proxy-from-env@1.1.0: {}
+
+  simple-apis@0.1.0:
+    dependencies:
+      axios: 1.13.2
+    transitivePeerDependencies:
+      - debug
 
   typescript@5.9.3: {}
